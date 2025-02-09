@@ -226,20 +226,36 @@ model cache_data {
 }
 
 model embed_configs {
-  id                         Int           @id @default(autoincrement())
-  uuid                       String        @unique
-  enabled                    Boolean       @default(false)
-  chat_mode                  String        @default("query")
+  id                         Int      @id @default(autoincrement())
+  uuid                       String   @unique
+  enabled                    Boolean  @default(false)
+  chat_mode                  String   @default("query")
   allowlist_domains          String?
-  allow_model_override       Boolean       @default(false)
-  allow_temperature_override Boolean       @default(false)
-  allow_prompt_override      Boolean       @default(false)
+  allow_model_override       Boolean  @default(false)
+  allow_temperature_override Boolean  @default(false)
+  allow_prompt_override      Boolean  @default(false)
   max_chats_per_day          Int?
   max_chats_per_session      Int?
   workspace_id               Int
   createdBy                  Int?
   usersId                    Int?
-  createdAt                  DateTime      @default(now())
+  createdAt                  DateTime @default(now())
+
+  // New fields for customization
+  chatIcon          String?
+  buttonColor       String?
+  userBgColor       String?
+  assistantBgColor  String?
+  brandImageUrl      String?
+  assistantName     String?
+  assistantIcon     String?
+  position          String?
+  windowHeight      String?
+  windowWidth       String?
+  textSize          String?
+  supportEmail      String?
+  defaultMessages   String?
+
   workspace                  workspaces    @relation(fields: [workspace_id], references: [id], onDelete: Cascade)
   embed_chats                embed_chats[]
   users                      users?        @relation(fields: [usersId], references: [id])

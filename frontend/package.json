@@ -3,13 +3,13 @@
   "private": false,
   "license": "MIT",
   "type": "module",
-  "scripts": {
-    "start": "vite --open",
-    "dev": "NODE_ENV=development vite --debug --host=0.0.0.0",
-    "build": "vite build && node scripts/postbuild.js",
-    "lint": "yarn prettier --ignore-path ../.prettierignore --write ./src",
-    "preview": "vite preview"
-  },
+"scripts": {
+  "start": "vite --open",
+  "dev": "cross-env NODE_ENV=development vite --debug --host=0.0.0.0",
+  "build": "vite build && node scripts/postbuild.js",
+  "lint": "yarn prettier --ignore-path ../.prettierignore --write ./src",
+  "preview": "vite preview"
+},
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
     "@mintplex-labs/piper-tts-web": "^1.0.4",

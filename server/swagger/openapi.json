@@ -3378,61 +3378,48 @@
         "description": "List all active embeds",
         "parameters": [],
         "responses": {
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/v1/embed/{uuid}": {
+      "get": {
+        "tags": [
+          "Embed"
+        ],
+        "description": "Get a single embed by UUID",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "UUID of the embed"
+          }
+        ],
+        "responses": {
           "200": {
-            "description": "OK",
+            "description": "Embed configuration",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "example": {
-                    "embeds": [
-                      {
-                        "id": 1,
-                        "uuid": "embed-uuid-1",
-                        "enabled": true,
-                        "chat_mode": "query",
-                        "createdAt": "2023-04-01T12:00:00Z",
-                        "workspace": {
-                          "id": 1,
-                          "name": "Workspace 1"
-                        },
-                        "chat_count": 10
-                      },
-                      {
-                        "id": 2,
-                        "uuid": "embed-uuid-2",
-                        "enabled": false,
-                        "chat_mode": "chat",
-                        "createdAt": "2023-04-02T14:30:00Z",
-                        "workspace": {
-                          "id": 1,
-                          "name": "Workspace 1"
-                        },
-                        "chat_count": 10
-                      }
-                    ]
-                  }
+                  "$ref": "#/components/schemas/EmbedConfig"
                 }
               }
             }
           },
           "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvalidAPIKey"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvalidAPIKey"
-                }
-              }
-            }
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Embed not found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Server Error"
           }
         }
       }
