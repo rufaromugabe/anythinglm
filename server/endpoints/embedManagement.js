@@ -60,25 +60,28 @@ function embedManagementEndpoints(app) {
         const user = await userFromSession(request, response);
         const { embedId } = request.params;
         const updates = reqBody(request);
-        if (updates.defaultMessages) {
-          try {
-            // Attempt to parse and re-stringify to ensure valid JSON
-            // If it's not an array, stringify it as an array.
-            const parsedMessages = JSON.parse(updates.defaultMessages);
-            if (!Array.isArray(parsedMessages))
-              throw new Error("Not array");
-  
-            updates.defaultMessages = JSON.stringify(parsedMessages);
-          } catch (e) {
-            console.error("Failed to parse defaultMessages - setting to null", e)
-            updates.defaultMessages = null; // Or handle the error differently
-          }
+      // Basic sanitization (you should add more robust validation as needed)
+      if (updates.defaultMessages) {
+        try {
+          // Attempt to parse and re-stringify to ensure valid JSON
+          // If it's not an array, stringify it as an array.
+          const parsedMessages = JSON.parse(updates.defaultMessages);
+          if (!Array.isArray(parsedMessages))
+            throw new Error("Not array");
+
+          updates.defaultMessages = JSON.stringify(parsedMessages);
+        } catch (e) {
+          console.error("Failed to parse defaultMessages - setting to null", e)
+          updates.defaultMessages = null; // Or handle the error differently
         }
-          // Restrict values which could be set to very large and strange strings
-        for(const key of ["position", "chatIcon", "windowHeight", "windowWidth", "textSize", "supportEmail", "assistantName"]){
-          if(updates?.[key]?.length > 255) updates[key] = updates[key].substring(0, 255);
-        }
-        const { success, error } = await EmbedConfig.update(embedId, updates);
+      }
+        // Restrict values which could be set to very large and strange strings
+      for(const key of ["position", "chatIcon", "windowHeight", "windowWidth", "textSize", "supportEmail", "assistantName"]){
+        if(updates?.[key]?.length > 255) updates[key] = updates[key].substring(0, 255);
+      }
+
+
+      const { success, error } = await EmbedConfig.update(embedId, updates);
         await EventLogs.logEvent("embed_updated", { embedId }, user?.id);
         response.status(200).json({ success, error });
       } catch (e) {
