@@ -43,7 +43,7 @@ const EmbedConfig = {
     supportEmail: (value) => typeof value === "string" ? value : null,
 
   },
-  validateFields: function(data) {
+    validateFields: function(data) {
     const validatedFields = {};
     
     // Only process fields that are in the writable array
@@ -69,16 +69,11 @@ const EmbedConfig = {
     return validatedFields;
   },
   new: async function (data, creatorId = null) {
-    const validatedData = this.validateFields(data);
     try {
       const embed = await prisma.embed_configs.create({
         data: {
           uuid: v4(),
           enabled: true,
-          ...validatedData,
-          workspace: {
-            connect: { id: Number(data.workspace_id) },
-          },
           chat_mode: validatedCreationData(data?.chat_mode, "chat_mode"),
           allowlist_domains: validatedCreationData(
             data?.allowlist_domains,

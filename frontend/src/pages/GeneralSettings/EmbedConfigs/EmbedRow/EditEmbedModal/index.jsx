@@ -89,10 +89,241 @@ export default function EditEmbedModal({ embed, closeModal }) {
                 defaultValue={embed.allow_prompt_override}
               />
 
-              {error && <p className="text-red-400 text-sm">Error: {error}</p>}
+              {/* New Appearance & Additional Settings */}
+              <fieldset className="border border-theme-modal-border p-4 rounded">
+                <legend className="text-white font-semibold mb-2">
+                  Appearance & Additional Settings
+                </legend>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="chatIcon"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Chat Icon URL
+                  </label>
+                  <input
+                    type="text"
+                    id="chatIcon"
+                    name="chatIcon"
+                    defaultValue={
+                      embed.chatIcon || "https://example.com/icons/chat.png"
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="buttonColor"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Button Color
+                  </label>
+                  <input
+                    type="color"
+                    id="buttonColor"
+                    name="buttonColor"
+                    defaultValue={embed.buttonColor || "#007BFF"}
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="userBgColor"
+                    className="block text-sm font-medium text-white"
+                  >
+                    User Background Color
+                  </label>
+                  <input
+                    type="color"
+                    id="userBgColor"
+                    name="userBgColor"
+                    defaultValue={embed.userBgColor || "#F5F5F5"}
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="assistantBgColor"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Assistant Background Color
+                  </label>
+                  <input
+                    type="color"
+                    id="assistantBgColor"
+                    name="assistantBgColor"
+                    defaultValue={embed.assistantBgColor || "#FFFFFF"}
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="brandImageUrl"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Brand Image URL
+                  </label>
+                  <input
+                    type="text"
+                    id="brandImageUrl"
+                    name="brandImageUrl"
+                    defaultValue={
+                      embed.brandImageUrl ||
+                      "https://example.com/images/brand-logo.png"
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="assistantName"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Assistant Name
+                  </label>
+                  <input
+                    type="text"
+                    id="assistantName"
+                    name="assistantName"
+                    defaultValue={embed.assistantName || "HelperBot"}
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="assistantIcon"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Assistant Icon URL
+                  </label>
+                  <input
+                    type="text"
+                    id="assistantIcon"
+                    name="assistantIcon"
+                    defaultValue={
+                      embed.assistantIcon ||
+                      "https://example.com/icons/assistant.png"
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="position"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Position
+                  </label>
+                  <input
+                    type="text"
+                    id="position"
+                    name="position"
+                    defaultValue={embed.position || "bottom-right"}
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="windowHeight"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Window Height
+                  </label>
+                  <input
+                    type="text"
+                    id="windowHeight"
+                    name="windowHeight"
+                    defaultValue={embed.windowHeight || "600px"}
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="windowWidth"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Window Width
+                  </label>
+                  <input
+                    type="text"
+                    id="windowWidth"
+                    name="windowWidth"
+                    defaultValue={embed.windowWidth || "400px"}
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="textSize"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Text Size
+                  </label>
+                  <input
+                    type="text"
+                    id="textSize"
+                    name="textSize"
+                    defaultValue={embed.textSize || "14px"}
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="supportEmail"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Support Email
+                  </label>
+                  <input
+                    type="email"
+                    id="supportEmail"
+                    name="supportEmail"
+                    defaultValue={
+                      embed.supportEmail || "support@example.com"
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="defaultMessages"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Default Messages (one per line)
+                  </label>
+                  <textarea
+                    id="defaultMessages"
+                    name="defaultMessages"
+                    rows="3"
+                    defaultValue={
+                      embed.defaultMessages
+                        ? embed.defaultMessages.join("\n")
+                        : "Hello!\nHow are you?\nNew default message!"
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                  ></textarea>
+                </div>
+              </fieldset>
+
+              {error && (
+                <p className="text-red-400 text-sm">Error: {error}</p>
+              )}
               <p className="text-white text-opacity-60 text-xs md:text-sm">
                 After creating an embed you will be provided a link that you can
-                publish on your website with a simple
+                publish on your website with a simple{" "}
                 <code className="border-none bg-theme-settings-input-bg text-white mx-1 px-1 rounded-sm">
                   &lt;script&gt;
                 </code>{" "}
