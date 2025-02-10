@@ -11,6 +11,102 @@ import {
 import Embed from "@/models/embed";
 import showToast from "@/utils/toast";
 
+// New reusable ColorPickerInput component
+function ColorPickerInput({ label, name, defaultValue }) {
+  const [color, setColor] = useState(defaultValue);
+
+  const handleColorChange = (e) => {
+    setColor(e.target.value);
+  };
+
+  const handleTextChange = (e) => {
+    let value = e.target.value;
+    // If the user forgets the "#", add it automatically
+    if (value && !value.startsWith("#")) {
+      value = "#" + value;
+    }
+    setColor(value);
+  };
+
+  return (
+    <div className="mb-4">
+      <label htmlFor={name} className="block text-sm font-medium text-white">
+        {label}
+      </label>
+      <div className="flex items-center mt-1 space-x-2">
+        {/* Color swatch */}
+        <input
+          type="color"
+          id={`${name}-color`}
+          value={color}
+          onChange={handleColorChange}
+          className="w-10 h-10 border border-gray-300 rounded"
+        />
+        {/* Text input for manual hex code entry */}
+        <input
+          type="text"
+          id={name}
+          name={name}
+          value={color}
+          onChange={handleTextChange}
+          className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[15rem] p-2.5"
+          placeholder="#XXXXXX"
+        />
+      </div>
+    </div>
+  );
+}
+function ChipInput({ messages, onMessagesChange }) {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && inputValue.trim()) {
+      e.preventDefault();
+      onMessagesChange([...messages, inputValue.trim()]);
+      setInputValue('');
+    } else if (e.key === 'Backspace' && !inputValue && messages.length > 0) {
+      e.preventDefault();
+      onMessagesChange(messages.slice(0, -1));
+    }
+  };
+
+  const removeMessage = (index) => {
+    const newMessages = messages.filter((_, i) => i !== index);
+    onMessagesChange(newMessages);
+  };
+
+  return (
+    <div className="border-none bg-theme-settings-input-bg text-white rounded-lg p-2 min-h-[100px] w-[35rem]">
+      <div className="flex flex-wrap gap-2 mb-2">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-1 bg-zinc-700 px-2 py-1 rounded-full"
+          >
+            <span className="text-sm">{message}</span>
+            <button
+              type="button"
+              onClick={() => removeMessage(index)}
+              className="text-white hover:text-red-400 focus:outline-none"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Type a message and press Enter"
+        className="bg-transparent border-none outline-none text-sm w-full"
+      />
+    </div>
+  );
+}
+
+
 export default function EditEmbedModal({ embed, closeModal }) {
   const [error, setError] = useState(null);
 
@@ -19,6 +115,9 @@ export default function EditEmbedModal({ embed, closeModal }) {
     e.preventDefault();
     const form = new FormData(e.target);
     const data = enforceSubmissionSchema(form);
+
+    data.defaultMessages = defaultMessages;
+
     const { success, error } = await Embed.updateEmbed(embed.id, data);
     if (success) {
       showToast("Embed updated successfully.", "success", { clear: true });
@@ -27,6 +126,14 @@ export default function EditEmbedModal({ embed, closeModal }) {
       }, 800);
     }
     setError(error);
+  };
+  const [defaultMessages, setDefaultMessages] = useState(
+    embed.defaultMessages || ["Hello!", "How are you?", "New default message!"]
+  );
+
+  const handleMessagesChange = (e) => {
+    const messages = e.target.value.split('\n').filter(msg => msg.trim());
+    setDefaultMessages(messages);
   };
 
   return (
@@ -100,66 +207,39 @@ export default function EditEmbedModal({ embed, closeModal }) {
                     htmlFor="chatIcon"
                     className="block text-sm font-medium text-white"
                   >
-                    Chat Icon URL
+                    Chat Icon
                   </label>
-                  <input
-                    type="text"
+                  <select
                     id="chatIcon"
                     name="chatIcon"
-                    defaultValue={
-                      embed.chatIcon || "https://example.com/icons/chat.png"
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label
-                    htmlFor="buttonColor"
-                    className="block text-sm font-medium text-white"
+                    defaultValue={embed.chatIcon || "chatBubble"}
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[15rem] p-2.5"
                   >
-                    Button Color
-                  </label>
-                  <input
-                    type="color"
-                    id="buttonColor"
-                    name="buttonColor"
-                    defaultValue={embed.buttonColor || "#007BFF"}
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2"
-                  />
+                    <option value="chatBubble">Chat Bubble</option>
+                    <option value="support">Support</option>
+                    <option value="search2">Search 2</option>
+                    <option value="search">Search</option>
+                    <option value="magic">Magic</option>
+                  </select>
                 </div>
+                {/* Replace the plain color inputs with the new component */}
+                <ColorPickerInput
+                  label="Button Color"
+                  name="buttonColor"
+                  defaultValue={embed.buttonColor || "#007BFF"}
+                />
 
-                <div className="mb-4">
-                  <label
-                    htmlFor="userBgColor"
-                    className="block text-sm font-medium text-white"
-                  >
-                    User Background Color
-                  </label>
-                  <input
-                    type="color"
-                    id="userBgColor"
-                    name="userBgColor"
-                    defaultValue={embed.userBgColor || "#F5F5F5"}
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2"
-                  />
-                </div>
+                <ColorPickerInput
+                  label="User Background Color"
+                  name="userBgColor"
+                  defaultValue={embed.userBgColor || "#F5F5F5"}
+                />
 
-                <div className="mb-4">
-                  <label
-                    htmlFor="assistantBgColor"
-                    className="block text-sm font-medium text-white"
-                  >
-                    Assistant Background Color
-                  </label>
-                  <input
-                    type="color"
-                    id="assistantBgColor"
-                    name="assistantBgColor"
-                    defaultValue={embed.assistantBgColor || "#FFFFFF"}
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2"
-                  />
-                </div>
+                <ColorPickerInput
+                  label="Assistant Background Color"
+                  name="assistantBgColor"
+                  defaultValue={embed.assistantBgColor || "#FFFFFF"}
+                />
 
                 <div className="mb-4">
                   <label
@@ -176,7 +256,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
                       embed.brandImageUrl ||
                       "https://example.com/images/brand-logo.png"
                     }
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[35rem] p-2.5"
                   />
                 </div>
 
@@ -192,7 +272,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
                     id="assistantName"
                     name="assistantName"
                     defaultValue={embed.assistantName || "HelperBot"}
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[35rem] p-2.5"
                   />
                 </div>
 
@@ -211,7 +291,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
                       embed.assistantIcon ||
                       "https://example.com/icons/assistant.png"
                     }
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[35rem] p-2.5"
                   />
                 </div>
 
@@ -227,7 +307,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
                     id="position"
                     name="position"
                     defaultValue={embed.position || "bottom-right"}
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[15rem] p-2.5"
                   />
                 </div>
 
@@ -243,7 +323,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
                     id="windowHeight"
                     name="windowHeight"
                     defaultValue={embed.windowHeight || "600px"}
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[15rem] p-2.5"
                   />
                 </div>
 
@@ -259,7 +339,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
                     id="windowWidth"
                     name="windowWidth"
                     defaultValue={embed.windowWidth || "400px"}
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[15rem] p-2.5"
                   />
                 </div>
 
@@ -275,7 +355,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
                     id="textSize"
                     name="textSize"
                     defaultValue={embed.textSize || "14px"}
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[15rem] p-2.5"
                   />
                 </div>
 
@@ -290,32 +370,29 @@ export default function EditEmbedModal({ embed, closeModal }) {
                     type="email"
                     id="supportEmail"
                     name="supportEmail"
-                    defaultValue={
-                      embed.supportEmail || "support@example.com"
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
+                    defaultValue={embed.supportEmail || "support@example.com"}
+                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[35rem] p-2.5"
                   />
                 </div>
 
                 <div className="mb-4">
                   <label
                     htmlFor="defaultMessages"
-                    className="block text-sm font-medium text-white"
+                    className="block text-sm font-medium text-white mb-2"
                   >
-                    Default Messages (one per line)
+                    Default Messages (press Enter to add)
                   </label>
-                  <textarea
-                    id="defaultMessages"
+                  <ChipInput
+                    messages={defaultMessages}
+                    onMessagesChange={setDefaultMessages}
+                  />
+                  <input
+                    type="hidden"
                     name="defaultMessages"
-                    rows="3"
-                    defaultValue={
-                      embed.defaultMessages
-                        ? embed.defaultMessages.join("\n")
-                        : "Hello!\nHow are you?\nNew default message!"
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 p-2 bg-theme-bg-secondary text-white"
-                  ></textarea>
+                    value={JSON.stringify(defaultMessages)}
+                  />
                 </div>
+
               </fieldset>
 
               {error && (
