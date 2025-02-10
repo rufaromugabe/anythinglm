@@ -30,5 +30,6 @@
   "private": false,
   "dependencies": {
     "cross-env": "^7.0.3"
-  }
+  },
+  "repository": "https://github.com/Mintplex-Labs/anything-llm.git"
 }

@@ -103,7 +103,28 @@ function apiEmbedEndpoints(app) {
         properties: {
           id: { type: 'integer' },
           uuid: { type: 'string' },
-          // ... other properties
+          enabled: { type: 'boolean' },
+          chat_mode: { type: 'string' },
+          createdAt: { type: 'string', format: 'date-time' },
+          workspace: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              name: { type: 'string' }
+            }
+          },
+          chatIcon: { type: 'string' },
+          buttonColor: { type: 'string' },
+          userBgColor: { type: 'string' },
+          assistantBgColor: { type: 'string' },
+          brandImageUrl: { type: 'string' },
+          assistantName: { type: 'string' },
+          assistantIcon: { type: 'string' },
+          position: { type: 'string' },
+          windowHeight: { type: 'string' },
+          windowWidth: { type: 'string' },
+          textSize: { type: 'string' },
+          supportEmail: { type: 'string' },
           defaultMessages: { type: 'array', items: { type: 'string' } }
         }
       }
