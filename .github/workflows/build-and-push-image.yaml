@@ -32,6 +32,11 @@ jobs:
           file: ./docker/Dockerfile  # Path to your Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
+          build-args: |
+            YARN_NETWORK_TIMEOUT=600000
+          network: host  # Fix Yarn network timeouts
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
