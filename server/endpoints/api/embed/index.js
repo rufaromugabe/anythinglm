@@ -91,44 +91,60 @@ function apiEmbedEndpoints(app) {
     }
   });
   app.get("/v1/embed/:uuid", [validApiKey], async (request, response) => { //uuid is used
-    /*
-      #swagger.tags = ['Embed']
-      #swagger.description = 'Get a single embed by UUID'
-      #swagger.parameters['uuid'] = { description: 'UUID of the embed', type: 'string', in: 'path', required: true} // Update Swagger docs
-      #swagger.responses[200] = { description: 'Embed configuration', content: { 'application/json': { schema: { $ref: '#/definitions/EmbedConfig' } } } }
-      #swagger.responses[404] = { description: 'Embed not found' }
-      #swagger.responses[500] = { description: 'Server Error' }
-      #swagger.definitions.EmbedConfig = { // Existing definition
-        type: 'object',
-        properties: {
-          id: { type: 'integer' },
-          uuid: { type: 'string' },
-          enabled: { type: 'boolean' },
-          chat_mode: { type: 'string' },
-          createdAt: { type: 'string', format: 'date-time' },
-          workspace: {
+     /*
+    #swagger.tags = ['Embed']
+    #swagger.description = 'Get a single embed by UUID'
+    #swagger.parameters['uuid'] = { 
+      description: 'UUID of the embed', 
+      type: 'string', 
+      in: 'path', 
+      required: true
+    }
+    #swagger.responses[200] = {
+      description: 'Embed configuration',
+      content: {
+        "application/json": {
+          schema: {
             type: 'object',
-            properties: {
-              id: { type: 'integer' },
-              name: { type: 'string' }
+            example: {
+              embed: {
+                id: 1,
+                uuid: "embed-uuid",
+                enabled: true,
+                chat_mode: "query",
+                createdAt: "2023-04-01T12:00:00Z",
+                workspace: {
+                  id: 1,
+                  name: "Workspace Name"
+                },
+                chatIcon: "chatBubble",
+                buttonColor: "#FF0000",
+                userBgColor: "#00FF00", 
+                assistantBgColor: "#0000FF",
+                brandImageUrl: "https://example.com/logo.png",
+                assistantName: "Assistant",
+                assistantIcon: "https://example.com/icon.png",
+                position: "bottom-right",
+                windowHeight: "500px",
+                windowWidth: "300px",
+                textSize: "16px",
+                supportEmail: "support@example.com",
+                defaultMessages: ["Hello!", "How can I help?"]
+              }
             }
-          },
-          chatIcon: { type: 'string' },
-          buttonColor: { type: 'string' },
-          userBgColor: { type: 'string' },
-          assistantBgColor: { type: 'string' },
-          brandImageUrl: { type: 'string' },
-          assistantName: { type: 'string' },
-          assistantIcon: { type: 'string' },
-          position: { type: 'string' },
-          windowHeight: { type: 'string' },
-          windowWidth: { type: 'string' },
-          textSize: { type: 'string' },
-          supportEmail: { type: 'string' },
-          defaultMessages: { type: 'array', items: { type: 'string' } }
+          }
         }
       }
-    */
+    }
+    #swagger.responses[403] = {
+      schema: {
+        "$ref": "#/definitions/InvalidAPIKey"
+      }
+    }
+    #swagger.responses[404] = { description: 'Embed not found' }
+    #swagger.responses[500] = { description: 'Server Error' } 
+  */
+
     try {
       const { uuid } = request.params;  // Use uuid from params
 

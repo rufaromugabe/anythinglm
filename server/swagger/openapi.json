@@ -3407,13 +3407,54 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmbedConfig"
+                  "type": "object",
+                  "example": {
+                    "embed": {
+                      "id": 1,
+                      "uuid": "embed-uuid",
+                      "enabled": true,
+                      "chat_mode": "query",
+                      "createdAt": "2023-04-01T12:00:00Z",
+                      "workspace": {
+                        "id": 1,
+                        "name": "Workspace Name"
+                      },
+                      "chatIcon": "chatBubble",
+                      "buttonColor": "#FF0000",
+                      "userBgColor": "#00FF00",
+                      "assistantBgColor": "#0000FF",
+                      "brandImageUrl": "https://example.com/logo.png",
+                      "assistantName": "Assistant",
+                      "assistantIcon": "https://example.com/icon.png",
+                      "position": "bottom-right",
+                      "windowHeight": "500px",
+                      "windowWidth": "300px",
+                      "textSize": "16px",
+                      "supportEmail": "support@example.com",
+                      "defaultMessages": [
+                        "Hello!",
+                        "How can I help?"
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidAPIKey"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidAPIKey"
+                }
+              }
+            }
           },
           "404": {
             "description": "Embed not found"
