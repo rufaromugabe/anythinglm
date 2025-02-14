@@ -1,5 +1,5 @@
-.env.production
-.env.development
+#.env.production
+#.env.development
 storage/assets/*
 !storage/assets/anything-llm.png
 storage/documents/*
