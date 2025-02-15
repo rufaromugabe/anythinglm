@@ -5,7 +5,7 @@ storage/assets/*
 storage/documents/*
 storage/comkey/*
 storage/tmp/*
-storage/vector-cache/*.json
+storage/vector-cache/*.json 
 storage/exports
 storage/imports
 storage/plugins/agent-skills/*
