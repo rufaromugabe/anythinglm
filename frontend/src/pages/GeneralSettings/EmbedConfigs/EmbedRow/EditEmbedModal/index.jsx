@@ -109,12 +109,18 @@ function ChipInput({ messages, onMessagesChange }) {
 
 export default function EditEmbedModal({ embed, closeModal }) {
   const [error, setError] = useState(null);
+  const [brandImage, setBrandImage] = useState(null);
+  const [assistantIcon, setAssistantIcon] = useState(null);
 
   const handleUpdate = async (e) => {
     setError(null);
     e.preventDefault();
     const form = new FormData(e.target);
     const data = enforceSubmissionSchema(form);
+
+    // Replace URL with uploaded base64 images if present
+    if (brandImage) data.brandImageUrl = brandImage;
+    if (assistantIcon) data.assistantIcon = assistantIcon;
 
     data.defaultMessages = defaultMessages;
 
@@ -135,6 +141,28 @@ export default function EditEmbedModal({ embed, closeModal }) {
     const messages = e.target.value.split('\n').filter(msg => msg.trim());
     setDefaultMessages(messages);
   };
+
+  const handleBrandImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const base64 = await fileToBase64(file);
+    setBrandImage(base64);
+  };
+
+  const handleAssistantIconUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const base64 = await fileToBase64(file);
+    setAssistantIcon(base64);
+  };
+
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
@@ -241,25 +269,77 @@ export default function EditEmbedModal({ embed, closeModal }) {
                   defaultValue={embed.assistantBgColor || "#FFFFFF"}
                 />
 
+               
                 <div className="mb-4">
                   <label
-                    htmlFor="brandImageUrl"
+                    htmlFor="brandImage"
                     className="block text-sm font-medium text-white"
                   >
-                    Brand Image URL
+                    Brand Image
                   </label>
                   <input
-                    type="text"
-                    id="brandImageUrl"
-                    name="brandImageUrl"
-                    defaultValue={
-                      embed.brandImageUrl ||
-                      "https://example.com/images/brand-logo.png"
-                    }
-                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[35rem] p-2.5"
+                    type="file"
+                    id="brandImage"
+                    name="brandImage"
+                    onChange={handleBrandImageUpload}
+                    className="hidden"
                   />
+                  <div>
+                    {(brandImage || embed.brandImageUrl) && (
+                      <img
+                        src={brandImage || embed.brandImageUrl}
+                        alt="Brand Preview"
+                        className="w-20 h-20 rounded mt-2 mb-2"
+                      />
+                    )}
+                    <label htmlFor="brandImage" className="cursor-pointer">
+                      <div className="w-full py-4 bg-theme-bg-primary hover:bg-theme-bg-secondary rounded-2xl border-2 border-dashed border-white transition-colors duration-300 p-3">
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="w-8 h-8 text-white/80">+</div>
+                          <div className="text-white text-opacity-80 text-sm font-semibold py-1">Click to upload</div>
+                          <div className="text-white text-opacity-60 text-xs font-medium py-1">Supports images</div>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
                 </div>
 
+               
+                <div className="mb-4">
+                  <label
+                    htmlFor="assistantIcon"
+                    className="block text-sm font-medium text-white"
+                  >
+                    Assistant Icon
+                  </label>
+                  <input
+                    type="file"
+                    id="assistantIcon"
+                    name="assistantIcon"
+                    onChange={handleAssistantIconUpload}
+                    className="hidden"
+                  />
+                  <div>
+                    {(assistantIcon || embed.assistantIcon) && (
+                      <img
+                        src={assistantIcon || embed.assistantIcon}
+                        alt="Assistant Preview"
+                        className="w-20 h-20 rounded mt-2 mb-2"
+                      />
+                    )}
+                    <label htmlFor="assistantIcon" className="cursor-pointer">
+                      <div className="w-full py-4 bg-theme-bg-primary hover:bg-theme-bg-secondary rounded-2xl border-2 border-dashed border-white transition-colors duration-300 p-3">
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="w-8 h-8 text-white/80">+</div>
+                          <div className="text-white text-opacity-80 text-sm font-semibold py-1">Click to upload</div>
+                          <div className="text-white text-opacity-60 text-xs font-medium py-1">Supports images</div>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                
                 <div className="mb-4">
                   <label
                     htmlFor="assistantName"
@@ -276,25 +356,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
                   />
                 </div>
 
-                <div className="mb-4">
-                  <label
-                    htmlFor="assistantIcon"
-                    className="block text-sm font-medium text-white"
-                  >
-                    Assistant Icon URL
-                  </label>
-                  <input
-                    type="text"
-                    id="assistantIcon"
-                    name="assistantIcon"
-                    defaultValue={
-                      embed.assistantIcon ||
-                      "https://example.com/icons/assistant.png"
-                    }
-                    className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-[35rem] p-2.5"
-                  />
-                </div>
-
+               
                 <div className="mb-4">
                   <label
                     htmlFor="position"

@@ -107,8 +107,9 @@ function embedManagementEndpoints(app) {
           data.defaultMessages = JSON.stringify(data.defaultMessages);
         }
 
-        // Sanitize string inputs (keep this too)
-        const stringKeys = [
+        // Separate image-related fields that need larger limits
+        const imageKeys = ["assistantIcon", "brandImageUrl"];
+        const regularStringKeys = [
           "position",
           "chatIcon",
           "windowHeight",
@@ -116,15 +117,23 @@ function embedManagementEndpoints(app) {
           "textSize",
           "supportEmail",
           "assistantName",
-          "assistantIcon",
-          "brandImageUrl",
           "buttonColor",
           "userBgColor",
           "assistantBgColor"
         ];
-        for (const key of stringKeys) {
+
+        // Apply different limits for regular strings vs image strings
+        for (const key of regularStringKeys) {
           if (data[key]?.length > 255) {
             data[key] = data[key].substring(0, 255);
+          }
+        }
+
+        // Allow much larger size for base64 image strings (10MB limit)
+        const MAX_BASE64_LENGTH = 10 * 1024 * 1024; // 10MB in characters
+        for (const key of imageKeys) {
+          if (data[key]?.length > MAX_BASE64_LENGTH) {
+            data[key] = data[key].substring(0, MAX_BASE64_LENGTH);
           }
         }
 
