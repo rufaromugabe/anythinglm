@@ -112,6 +112,8 @@ export default function EditEmbedModal({ embed, closeModal }) {
   const [brandImage, setBrandImage] = useState(null);
   const [assistantIcon, setAssistantIcon] = useState(null);
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
   const handleUpdate = async (e) => {
     setError(null);
     e.preventDefault();
@@ -145,6 +147,10 @@ export default function EditEmbedModal({ embed, closeModal }) {
   const handleBrandImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
+    if (file.size > MAX_FILE_SIZE) {
+      showToast("File size exceeds 5MB.", "error");
+      return;
+    }
     const base64 = await fileToBase64(file);
     setBrandImage(base64);
   };
@@ -152,6 +158,10 @@ export default function EditEmbedModal({ embed, closeModal }) {
   const handleAssistantIconUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
+    if (file.size > MAX_FILE_SIZE) {
+      showToast("File size exceeds 5MB.", "error");
+      return;
+    }
     const base64 = await fileToBase64(file);
     setAssistantIcon(base64);
   };
