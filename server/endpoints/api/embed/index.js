@@ -81,17 +81,18 @@ function apiEmbedEndpoints(app) {
         textSize: embed.textSize,
         supportEmail: embed.supportEmail,
         // Parse the JSON string back into an array:
-        defaultMessages: safeJsonParse(embed.defaultMessages, [])  
+        defaultMessages: safeJsonParse(embed.defaultMessages, []),
       }));
-  
+
       response.status(200).json({ embeds: filteredEmbeds });
     } catch (e) {
       console.error(e.message, e);
       response.sendStatus(500).end();
     }
   });
-  app.get("/v1/embed/:uuid", [validApiKey], async (request, response) => { //uuid is used
-     /*
+  app.get("/v1/embed/:uuid", [validApiKey], async (request, response) => {
+    //uuid is used
+    /*
     #swagger.tags = ['Embed']
     #swagger.description = 'Get a single embed by UUID'
     #swagger.parameters['uuid'] = { 
@@ -146,14 +147,14 @@ function apiEmbedEndpoints(app) {
   */
 
     try {
-      const { uuid } = request.params;  // Use uuid from params
+      const { uuid } = request.params; // Use uuid from params
 
       const embed = await EmbedConfig.getWithWorkspace({ uuid: uuid }); // Query by UUID
 
       if (!embed) {
         return response.status(404).json({ message: "Embed not found" });
       }
-        // Parse and return all required fields.
+      // Parse and return all required fields.
       const embedConfig = {
         id: embed.id,
         uuid: embed.uuid,
@@ -179,8 +180,6 @@ function apiEmbedEndpoints(app) {
         supportEmail: embed.supportEmail,
         defaultMessages: safeJsonParse(embed.defaultMessages, []),
       };
-
-
 
       response.status(200).json({ embed: embedConfig });
     } catch (e) {
@@ -240,7 +239,7 @@ function apiEmbedEndpoints(app) {
     */
       try {
         const { embedId } = request.params;
-        const embed = await EmbedConfig.getWithWorkspace({ uuid: embedId }); 
+        const embed = await EmbedConfig.getWithWorkspace({ uuid: embedId });
         if (!embed) {
           return response.status(404).json({ error: "Embed not found" });
         }

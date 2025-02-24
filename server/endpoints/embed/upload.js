@@ -17,7 +17,9 @@ router.post(
     try {
       const embedId = req.params.id;
       if (!req.file) {
-        return res.status(400).json({ success: false, error: "File upload failed." });
+        return res
+          .status(400)
+          .json({ success: false, error: "File upload failed." });
       }
       const filename = req.file.filename;
       await Embed.updateField(embedId, "assistantIcon", filename);
@@ -38,7 +40,9 @@ router.post(
     try {
       const embedId = req.params.id;
       if (!req.file) {
-        return res.status(400).json({ success: false, error: "File upload failed." });
+        return res
+          .status(400)
+          .json({ success: false, error: "File upload failed." });
       }
       const filename = req.file.filename;
       await Embed.updateField(embedId, "brandImageUrl", filename);

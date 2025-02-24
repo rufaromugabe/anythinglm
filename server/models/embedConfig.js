@@ -28,26 +28,26 @@ const EmbedConfig = {
     "supportEmail",
     "defaultMessages",
   ],
-  validations: { //Add validations for the new fields
-    chatIcon: (value) => typeof value === "string" ? value : null,
-    buttonColor: (value) => typeof value === "string" ? value : null,
-    userBgColor: (value) => typeof value === "string" ? value : null,
-    assistantBgColor: (value) => typeof value === "string" ? value : null,
-    brandImageUrl: (value) => typeof value === "string" ? value : null,
-    assistantName: (value) => typeof value === "string" ? value : null,
-    assistantIcon: (value) => typeof value === "string" ? value : null,
-    position: (value) => typeof value === "string" ? value : null,
-    windowHeight: (value) => typeof value === "string" ? value : null,
-    windowWidth: (value) => typeof value === "string" ? value : null,
-    textSize: (value) => typeof value === "string" ? value : null,
-    supportEmail: (value) => typeof value === "string" ? value : null,
-
+  validations: {
+    //Add validations for the new fields
+    chatIcon: (value) => (typeof value === "string" ? value : null),
+    buttonColor: (value) => (typeof value === "string" ? value : null),
+    userBgColor: (value) => (typeof value === "string" ? value : null),
+    assistantBgColor: (value) => (typeof value === "string" ? value : null),
+    brandImageUrl: (value) => (typeof value === "string" ? value : null),
+    assistantName: (value) => (typeof value === "string" ? value : null),
+    assistantIcon: (value) => (typeof value === "string" ? value : null),
+    position: (value) => (typeof value === "string" ? value : null),
+    windowHeight: (value) => (typeof value === "string" ? value : null),
+    windowWidth: (value) => (typeof value === "string" ? value : null),
+    textSize: (value) => (typeof value === "string" ? value : null),
+    supportEmail: (value) => (typeof value === "string" ? value : null),
   },
-    validateFields: function(data) {
+  validateFields: function (data) {
     const validatedFields = {};
-    
+
     // Only process fields that are in the writable array
-    Object.keys(data).forEach(field => {
+    Object.keys(data).forEach((field) => {
       if (!this.writable.includes(field)) return;
 
       // If field has a specific validation function, use it
@@ -225,9 +225,6 @@ const EmbedConfig = {
   },
 };
 
-
-
-
 const BOOLEAN_KEYS = [
   "allow_model_override",
   "allow_temperature_override",
@@ -247,12 +244,18 @@ function validatedCreationData(value, field) {
     if (!value || !VALID_CHAT_MODE.includes(value)) return "query";
     return value;
   }
-if (field === "defaultMessages") {  // Validate and stringify defaultMessages
+  if (field === "defaultMessages") {
+    // Validate and stringify defaultMessages
     try {
       if (!value) return null; // Handle null or empty values
       const parsedMessages = JSON.parse(value);
-      if (!Array.isArray(parsedMessages) || !parsedMessages.every(item => typeof item === 'string')) {
-        throw new Error("Invalid defaultMessages format. Must be an array of strings.");
+      if (
+        !Array.isArray(parsedMessages) ||
+        !parsedMessages.every((item) => typeof item === "string")
+      ) {
+        throw new Error(
+          "Invalid defaultMessages format. Must be an array of strings."
+        );
       }
       return JSON.stringify(parsedMessages); // Store as JSON string
     } catch (e) {

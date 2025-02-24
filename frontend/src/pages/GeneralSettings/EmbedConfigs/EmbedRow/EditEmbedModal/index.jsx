@@ -57,14 +57,14 @@ function ColorPickerInput({ label, name, defaultValue }) {
   );
 }
 function ChipInput({ messages, onMessagesChange }) {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
+    if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
       onMessagesChange([...messages, inputValue.trim()]);
-      setInputValue('');
-    } else if (e.key === 'Backspace' && !inputValue && messages.length > 0) {
+      setInputValue("");
+    } else if (e.key === "Backspace" && !inputValue && messages.length > 0) {
       e.preventDefault();
       onMessagesChange(messages.slice(0, -1));
     }
@@ -106,7 +106,6 @@ function ChipInput({ messages, onMessagesChange }) {
   );
 }
 
-
 export default function EditEmbedModal({ embed, closeModal }) {
   const [error, setError] = useState(null);
   const [brandImage, setBrandImage] = useState(null);
@@ -140,7 +139,7 @@ export default function EditEmbedModal({ embed, closeModal }) {
   );
 
   const handleMessagesChange = (e) => {
-    const messages = e.target.value.split('\n').filter(msg => msg.trim());
+    const messages = e.target.value.split("\n").filter((msg) => msg.trim());
     setDefaultMessages(messages);
   };
 
@@ -279,7 +278,6 @@ export default function EditEmbedModal({ embed, closeModal }) {
                   defaultValue={embed.assistantBgColor || "#FFFFFF"}
                 />
 
-               
                 <div className="mb-4">
                   <label
                     htmlFor="brandImage"
@@ -306,15 +304,18 @@ export default function EditEmbedModal({ embed, closeModal }) {
                       <div className="w-full py-4 bg-theme-bg-primary hover:bg-theme-bg-secondary rounded-2xl border-2 border-dashed border-white transition-colors duration-300 p-3">
                         <div className="flex flex-col items-center justify-center">
                           <div className="w-8 h-8 text-white/80">+</div>
-                          <div className="text-white text-opacity-80 text-sm font-semibold py-1">Click to upload</div>
-                          <div className="text-white text-opacity-60 text-xs font-medium py-1">Supports images</div>
+                          <div className="text-white text-opacity-80 text-sm font-semibold py-1">
+                            Click to upload
+                          </div>
+                          <div className="text-white text-opacity-60 text-xs font-medium py-1">
+                            Supports images
+                          </div>
                         </div>
                       </div>
                     </label>
                   </div>
                 </div>
 
-               
                 <div className="mb-4">
                   <label
                     htmlFor="assistantIcon"
@@ -341,15 +342,18 @@ export default function EditEmbedModal({ embed, closeModal }) {
                       <div className="w-full py-4 bg-theme-bg-primary hover:bg-theme-bg-secondary rounded-2xl border-2 border-dashed border-white transition-colors duration-300 p-3">
                         <div className="flex flex-col items-center justify-center">
                           <div className="w-8 h-8 text-white/80">+</div>
-                          <div className="text-white text-opacity-80 text-sm font-semibold py-1">Click to upload</div>
-                          <div className="text-white text-opacity-60 text-xs font-medium py-1">Supports images</div>
+                          <div className="text-white text-opacity-80 text-sm font-semibold py-1">
+                            Click to upload
+                          </div>
+                          <div className="text-white text-opacity-60 text-xs font-medium py-1">
+                            Supports images
+                          </div>
                         </div>
                       </div>
                     </label>
                   </div>
                 </div>
 
-                
                 <div className="mb-4">
                   <label
                     htmlFor="assistantName"
@@ -366,7 +370,6 @@ export default function EditEmbedModal({ embed, closeModal }) {
                   />
                 </div>
 
-               
                 <div className="mb-4">
                   <label
                     htmlFor="position"
@@ -464,12 +467,9 @@ export default function EditEmbedModal({ embed, closeModal }) {
                     value={JSON.stringify(defaultMessages)}
                   />
                 </div>
-
               </fieldset>
 
-              {error && (
-                <p className="text-red-400 text-sm">Error: {error}</p>
-              )}
+              {error && <p className="text-red-400 text-sm">Error: {error}</p>}
               <p className="text-white text-opacity-60 text-xs md:text-sm">
                 After creating an embed you will be provided a link that you can
                 publish on your website with a simple{" "}

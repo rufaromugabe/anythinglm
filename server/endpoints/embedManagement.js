@@ -2,9 +2,7 @@ const { EmbedChats } = require("../models/embedChats");
 const { EmbedConfig } = require("../models/embedConfig");
 const { EventLogs } = require("../models/eventLogs");
 const { reqBody, userFromSession, safeJsonParse } = require("../utils/http");
-const {
-  validEmbedConfigId,
-} = require("../utils/middleware/embedMiddleware");
+const { validEmbedConfigId } = require("../utils/middleware/embedMiddleware");
 const {
   flexUserRoleValid,
   ROLES,
@@ -54,14 +52,14 @@ function embedManagementEndpoints(app) {
         const filteredEmbeds = embeds.map((embed) => ({
           ...embed,
           defaultMessages: safeJsonParse(embed.defaultMessages, []), // parse JSON string
-          _count: { embed_chats: embed._count.embed_chats },          // rename for frontend compatibility
-          workspace: {                                               // include only relevant workspace info
+          _count: { embed_chats: embed._count.embed_chats }, // rename for frontend compatibility
+          workspace: {
+            // include only relevant workspace info
             id: embed.workspace.id,
             name: embed.workspace.name,
           },
-          
         }));
-        
+
         response.status(200).json({ embeds: filteredEmbeds });
       } catch (e) {
         console.error(e);
@@ -79,11 +77,16 @@ function embedManagementEndpoints(app) {
         const user = await userFromSession(request, response);
         const data = reqBody(request);
         const { embed, message: error } = await EmbedConfig.new(data, user?.id);
-        if (error) {  // Return error if embed creation failed
+        if (error) {
+          // Return error if embed creation failed
           console.error(error);
-          return response.status(500).json({ error }); 
+          return response.status(500).json({ error });
         }
-        await EventLogs.logEvent("embed_created", { embedId: embed.id }, user?.id);
+        await EventLogs.logEvent(
+          "embed_created",
+          { embedId: embed.id },
+          user?.id
+        );
         response.status(200).json({ embed, error: null }); // Success response
       } catch (e) {
         console.error(e);
@@ -91,7 +94,6 @@ function embedManagementEndpoints(app) {
       }
     }
   );
-
 
   app.post(
     "/embed/update/:embedId",
@@ -119,7 +121,7 @@ function embedManagementEndpoints(app) {
           "assistantName",
           "buttonColor",
           "userBgColor",
-          "assistantBgColor"
+          "assistantBgColor",
         ];
 
         // Apply different limits for regular strings vs image strings
@@ -139,7 +141,9 @@ function embedManagementEndpoints(app) {
 
         const embedRecord = await EmbedConfig.get({ id: Number(embedId) });
         if (!embedRecord) {
-          return response.status(404).json({ success: false, error: "Embed not found" });
+          return response
+            .status(404)
+            .json({ success: false, error: "Embed not found" });
         }
 
         // Create updates object with validated and sanitized values
@@ -149,7 +153,7 @@ function embedManagementEndpoints(app) {
             updates[key] = data[key];
           }
         }
-        
+
         const { success, error } = await EmbedConfig.update(embedId, updates);
         if (!success) throw new Error(error); // Throw error if update fails
 
@@ -162,7 +166,6 @@ function embedManagementEndpoints(app) {
       }
     }
   );
-
 
   app.delete(
     "/embed/:embedId",
@@ -205,7 +208,6 @@ function embedManagementEndpoints(app) {
     }
   );
 
-
   app.delete(
     "/embed/chats/:chatId",
     [validatedRequest, flexUserRoleValid([ROLES.admin])],
@@ -213,7 +215,9 @@ function embedManagementEndpoints(app) {
       /* ... swagger docs ... */
       try {
         const { chatId } = request.params;
-        const { success, error } = await EmbedChats.delete({ id: Number(chatId) }); // return success/error
+        const { success, error } = await EmbedChats.delete({
+          id: Number(chatId),
+        }); // return success/error
         response.status(200).json({ success, error }); // Respond with success/error
       } catch (e) {
         console.error(e);
@@ -221,7 +225,6 @@ function embedManagementEndpoints(app) {
       }
     }
   );
-
 }
 
 module.exports = { embedManagementEndpoints };
